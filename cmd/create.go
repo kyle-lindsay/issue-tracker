@@ -1,9 +1,11 @@
-package main
+package cmd
 
 import (
 	// "fmt"
 
 	"github.com/spf13/cobra"
+    "issue-tracker/model"
+    "issue-tracker/tracker"
 )
 
 var (
@@ -21,23 +23,23 @@ and usage of using your command. For example:`,
 	Run: func(cmd *cobra.Command, args []string) {
         issueTitle := args[0]
 
-        var chosenPriority Priority
+        var chosenPriority model.Priority
         switch priority {
             case "low":
-                chosenPriority = Low
+                chosenPriority = model.Low
             case "high":
-                chosenPriority = High
+                chosenPriority = model.High
             default:
-                chosenPriority = Medium
+                chosenPriority = model.Medium
         }
 
-        newIssue := Issue{
+        newIssue := model.Issue{
             Title: issueTitle,
             Priority: chosenPriority,
             Description: description,
         }
 
-        err := createIssue(newIssue)
+        err := tracker.CreateIssue(newIssue)
         if err != nil {
             cmd.PrintErrf("Error: Failed to create issue: %v\n", err)
             return

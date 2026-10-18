@@ -1,0 +1,31 @@
+package tracker
+
+import (
+    "issue-tracker/model"
+    "os"
+)
+
+const jsonFile = ".issues.json"
+
+func GetIssueTitles(issueStatus model.Status) []string, err {
+    var issues []model.Issue
+
+    if _, err := os.Stat(jsonFile); err == nil {
+        data, err := os.ReadFile(jsonFile)
+        if err != nil {
+            return _, err
+        }
+
+        _, err := json.Unmarshal(data, &issues)
+    }
+
+    var titles []string
+    for _, currentIssue := range issues {
+        if currentIssue.Priority == model.Status {
+            titles = append(titles, currentIssue.Title)
+        }
+    }
+    
+    return titles, _
+}
+
