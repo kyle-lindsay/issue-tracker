@@ -45,6 +45,11 @@ and usage of using your command. For example:`,
             return
         }
 
+        err = tracker.UpdateGitIgnore()
+        if err != nil {
+            cmd.PrintErrf("Error: Failed to update .gitignore: %v\n", err)
+        }
+
         cmd.Printf("Created new issue %s [Priority: %s]\n", newIssue.Title, newIssue.Priority)
     },
 }
