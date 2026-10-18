@@ -1,19 +1,20 @@
-package main
+package tracker
 
 import (
     "errors"
     "os"
     "encoding/json"
+    "issue-tracker/model"
 )
 
 const jsonFile = ".issues.json"
 
-func createIssue(newIssue Issue) error {
+func CreateIssue(newIssue model.Issue) error {
     if newIssue.Title == "" {
         return errors.New("issue title cannot be empty")
     }
 
-    var issues []Issue
+    var issues []model.Issue
 
     if _, err := os.Stat(jsonFile); err == nil {
         data, err := os.ReadFile(jsonFile)
@@ -36,7 +37,7 @@ func createIssue(newIssue Issue) error {
 
     newIssue.Id = maxId + 1
 
-    newIssue.Status = Open
+    newIssue.Status = model.Open
 
     issues = append(issues, newIssue)
     jsonData, err := json.MarshalIndent(issues, "", " ")

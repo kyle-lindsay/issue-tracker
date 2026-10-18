@@ -2,7 +2,7 @@
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 
 */
-package main
+package cmd
 
 import (
 	"os"
