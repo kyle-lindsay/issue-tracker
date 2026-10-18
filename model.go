@@ -1,6 +1,6 @@
 package main
 
-import 'time'
+import "time"
 
 type Priority int
 const (
@@ -9,9 +9,9 @@ const (
     High
 )
 func (p Priority) String() string {
-    strings := [...]string{'Low', 'Medium', 'High'}
+    strings := [...]string{"Low", "Medium", "High"}
     if p < Low || p > High {
-        return 'Unknown'
+        return "Unknown"
     }
     return strings[p]
 }
@@ -23,9 +23,9 @@ const (
     Deleted
 )
 func (s Status) String() string {
-    strings := [...]string{'Open', 'Closed', 'Deleted'}
+    strings := [...]string{"Open", "Closed", "Deleted"}
     if s < Open || s > Deleted {
-        return 'Unknown'
+        return "Unknown"
     }
     return strings[s]
 }
