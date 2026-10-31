@@ -23,23 +23,13 @@ and usage of using your command. For example:`,
 	Run: func(cmd *cobra.Command, args []string) {
         issueTitle := args[0]
 
-        var chosenPriority model.Priority
-        switch priority {
-            case "low":
-                chosenPriority = model.Low
-            case "high":
-                chosenPriority = model.High
-            default:
-                chosenPriority = model.Medium
-        }
-
-        time := time.Now()        
+        chosenPriority := ParsePriority(priority)
 
         newIssue := model.Issue{
             Title: issueTitle,
             Priority: chosenPriority,
             Description: description,
-            CreatedAt: time,
+            CreatedAt: time.Now(),
         }
 
         err := tracker.CreateIssue(newIssue)

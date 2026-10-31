@@ -30,3 +30,20 @@ func GetIssuesWithStatus(status model.Status) ([]model.Issue, error) {
     return openIssues, nil
 }
 
+func UpdateGitIgnore() error {
+    if _, err := os.Stat(".gitignore"); !os.IsNotExist(err) {
+        data, err := os.ReadFile(".gitignore")
+        if err != nil {
+            return err
+        }
+
+        if strings.Contains(string(data), ".issues.json") {
+            return nil
+        }
+
+        newData := fmt.Sprintf("%s\n.issues.json\n", string(data))
+        return os.WriteFile(".gitignore", []byte(newData), 0644)
+    }
+
+    return nil
+}
