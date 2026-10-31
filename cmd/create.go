@@ -2,7 +2,7 @@ package cmd
 
 import (
 	// "fmt"
-
+    "time"
 	"github.com/spf13/cobra"
     "issue-tracker/model"
     "issue-tracker/tracker"
@@ -33,10 +33,13 @@ and usage of using your command. For example:`,
                 chosenPriority = model.Medium
         }
 
+        time := time.Now()        
+
         newIssue := model.Issue{
             Title: issueTitle,
             Priority: chosenPriority,
             Description: description,
+            CreatedAt: time,
         }
 
         err := tracker.CreateIssue(newIssue)
