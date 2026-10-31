@@ -25,7 +25,7 @@ func CreateIssue(newIssue model.Issue) error {
         _ = json.Unmarshal(data, &issues)
     }
 
-    maxId := 0
+    maxId := -1
     for _, existingIssue := range issues {
         if existingIssue.Id > maxId {
             maxId = existingIssue.Id
