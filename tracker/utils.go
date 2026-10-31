@@ -3,7 +3,9 @@ package tracker
 import (
     "issue-tracker/model"
     "os"
+    "strings"
     "encoding/json"
+    "fmt"
 )
 
 const jsonFile = ".issues.json"

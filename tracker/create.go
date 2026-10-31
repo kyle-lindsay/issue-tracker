@@ -3,8 +3,6 @@ package tracker
 import (
     "errors"
     "os"
-    "fmt"
-    "strings"
     "encoding/json"
     "issue-tracker/model"
 )
