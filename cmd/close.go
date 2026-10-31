@@ -1,15 +1,11 @@
 package cmd
 
 import (
-//	"fmt"
     "strconv"
-
 	"github.com/spf13/cobra"
     "issue-tracker/model"
     "issue-tracker/tracker"
 )
-
-const jsonFile = ".issues.json"
 
 // closeCmd represents the close command
 var closeCmd = &cobra.Command{

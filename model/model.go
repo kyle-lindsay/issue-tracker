@@ -31,10 +31,10 @@ func (s Status) String() string {
 }
 
 type Issue struct {
-    Id int `json:id`
-    Title string `json:title`
-    Description string `json:description`
-    Priority Priority `json:priority`
-    Status Status `json:status`
-    CreatedAt time.Time `json:created_at`
+    Id int `json:"id"`
+    Title string `json:"title"`
+    Description string `json:"description"`
+    Priority Priority `json:"priority"`
+    Status Status `json:"status"`
+    CreatedAt time.Time `json:"created_at"`
 }
