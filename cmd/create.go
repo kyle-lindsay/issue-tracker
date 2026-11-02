@@ -1,16 +1,17 @@
 package cmd
 
 import (
-	// "fmt"
     "time"
+    "strings"
+
 	"github.com/spf13/cobra"
     "issue-tracker/model"
     "issue-tracker/tracker"
 )
 
 var (
-    priority string
-    description string
+    createPriority string
+    createDescription string
 )
 
 // createCmd represents the create command
@@ -22,14 +23,24 @@ and usage of using your command. For example:`,
     Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
         issueTitle := args[0]
+        
+        createPriority = strings.ToLower(createPriority)
 
-        chosenPriority := ParsePriority(priority)
+        if !IsValidPriority(createPriority) {
+            cmd.PrintErrf("Error: Invalid priority %q. Must be one of: %v\n", createPriority, GetValidPriorities())
+            return
+        }
+
+        chosenPriority := ParsePriority(createPriority)
+        
+        currentTime := time.Now()
 
         newIssue := model.Issue{
             Title: issueTitle,
             Priority: chosenPriority,
-            Description: description,
-            CreatedAt: time.Now(),
+            Description: createDescription,
+            CreatedAt: currentTime,
+            LastUpdated: currentTime,
         }
 
         err := tracker.CreateIssue(newIssue)
@@ -43,13 +54,13 @@ and usage of using your command. For example:`,
             cmd.PrintErrf("Error: Failed to update .gitignore: %v\n", err)
         }
 
-        cmd.Printf("Created new issue %s [Priority: %s]\n", newIssue.Title, newIssue.Priority)
+        cmd.Printf("Created new issue \"%s\" [Priority: %s]\n", newIssue.Title, newIssue.Priority)
     },
 }
 
 func init() {
     rootCmd.AddCommand(createCmd)
 
-    createCmd.Flags().StringVarP(&priority, "priority", "p", "medium", "Set issue importance level (low, medium, high)")
-    createCmd.Flags().StringVarP(&description, "description", "d", "", "Add a detailed description of the issue")
+    createCmd.Flags().StringVarP(&createPriority, "priority", "p", "medium", "Set issue importance level (low, medium, high)")
+    createCmd.Flags().StringVarP(&createDescription, "description", "d", "", "Add a description of the issue")
 }

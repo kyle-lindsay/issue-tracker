@@ -4,12 +4,13 @@ import "time"
 
 type Priority int
 const (
-    Low Priority = iota
+    UnknownPriority Priority = iota
+    Low
     Medium
     High
 )
 func (p Priority) String() string {
-    strings := [...]string{"Low", "Medium", "High"}
+    strings := [...]string{"Unknown", "Low", "Medium", "High"}
     if p < Low || p > High {
         return "Unknown"
     }
@@ -18,12 +19,13 @@ func (p Priority) String() string {
 
 type Status int
 const (
-    Open Status = iota
+    UnknownStatus Status = iota
+    Open
     Closed
     Deleted
 )
 func (s Status) String() string {
-    strings := [...]string{"Open", "Closed", "Deleted"}
+    strings := [...]string{"Unknown", "Open", "Closed", "Deleted"}
     if s < Open || s > Deleted {
         return "Unknown"
     }
@@ -37,4 +39,5 @@ type Issue struct {
     Priority Priority `json:"priority"`
     Status Status `json:"status"`
     CreatedAt time.Time `json:"created_at"`
+    LastUpdated time.Time `json:"last_updated"`
 }

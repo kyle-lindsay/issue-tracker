@@ -2,7 +2,7 @@
 
 build:
 	@echo "Building binary..."
-	go build -o issue-tracker
+	go build -o issues
 
 dev: build
 	@echo "App compiled. To load autocomplete, run this command:"

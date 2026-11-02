@@ -10,7 +10,7 @@ import (
 
 const jsonFile = ".issues.json"
 
-func GetIssuesWithStatus(status model.Status) ([]model.Issue, error) {
+func GetIssues() ([]model.Issue, error) {
     var issues []model.Issue
 
     if _, err := os.Stat(jsonFile); err == nil {
@@ -22,14 +22,40 @@ func GetIssuesWithStatus(status model.Status) ([]model.Issue, error) {
         _ = json.Unmarshal(data, &issues)
     }
 
-    var openIssues []model.Issue
-    for _, currentIssue := range issues {
-        if currentIssue.Status == status {
-            openIssues = append(openIssues, currentIssue)
+    
+    return issues, nil
+}
+
+func GetIssue(id int) (*model.Issue, error) {
+    issues, err := GetIssues()
+    if err != nil {
+        return nil, err
+    }
+
+    for i := range issues {
+        if issues[i].Id == id {
+            return &issues[i], nil
         }
     }
-    
-    return openIssues, nil
+
+    return nil, nil
+}
+
+func GetIssuesWithStatus(status model.Status) ([]model.Issue, error) {
+    var issues []model.Issue
+    var issuesWithStatus []model.Issue
+
+    issues, err := GetIssues()
+    if err != nil {
+        return nil, err
+    }
+
+    for _, issue := range issues {
+        if issue.Status == status {
+            issuesWithStatus = append(issuesWithStatus, issue)
+        }
+    }
+    return issuesWithStatus, nil
 }
 
 func UpdateGitIgnore() error {
