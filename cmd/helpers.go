@@ -41,7 +41,7 @@ func IsValidPriority(priority string) bool {
 }
 
 func IsValidQueryPriority(priority string) bool {
-    return slices.Contains(getQueryPriorities(), priority)
+    return slices.Contains(GetValidQueryPriorities(), priority)
 }
 
 func GetValidPriorities() []string {
@@ -49,8 +49,12 @@ func GetValidPriorities() []string {
     return validPriorities
 }
 
-func getQueryPriorities() []string {
+func GetValidQueryPriorities() []string {
     return append(GetValidPriorities(), "any")
+}
+
+func IsValidQueryStatus(status string) bool {
+    return slices.Contains(GetValidQueryStatuses(), status)
 }
 
 func IsValidStatus(status string) bool {
@@ -60,4 +64,8 @@ func IsValidStatus(status string) bool {
 func GetValidStatuses() []string {
     validStatuses := []string{"open", "closed", "deleted"}
     return validStatuses
+}
+
+func GetValidQueryStatuses() []string {
+    return append(GetValidStatuses(), "any")
 }

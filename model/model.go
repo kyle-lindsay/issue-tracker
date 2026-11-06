@@ -41,3 +41,14 @@ type Issue struct {
     CreatedAt time.Time `json:"created_at"`
     LastUpdated time.Time `json:"last_updated"`
 }
+
+type IssueFilter struct {
+    Id *int
+    Title *string
+    Description *string
+    Priority *Priority
+    Status *Status
+    CreatedAt *time.Time
+    LastUpdated *time.Time
+    ActiveFilters map[string]bool
+}

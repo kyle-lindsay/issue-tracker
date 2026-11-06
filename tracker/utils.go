@@ -2,6 +2,8 @@ package tracker
 
 import (
     "issue-tracker/model"
+    
+    "reflect"
     "os"
     "strings"
     "encoding/json"
@@ -41,21 +43,65 @@ func GetIssue(id int) (*model.Issue, error) {
     return nil, nil
 }
 
-func GetIssuesWithStatus(status model.Status) ([]model.Issue, error) {
+func GetMatchingIssues(criteria model.IssueFilter) ([]model.Issue, error) {
     var issues []model.Issue
-    var issuesWithStatus []model.Issue
+    var matchingIssues []model.Issue
 
     issues, err := GetIssues()
     if err != nil {
         return nil, err
     }
 
-    for _, issue := range issues {
-        if issue.Status == status {
-            issuesWithStatus = append(issuesWithStatus, issue)
+    criteriaVal := reflect.ValueOf(criteria)
+    match := false
+
+    for i := range issues {
+        match = true 
+        issueVal := reflect.ValueOf(issues[i])
+
+        for j:=0; j<criteriaVal.NumField(); j++ {
+            fieldName := criteriaVal.Type().Field(j).Name
+
+            if fieldName == "ActiveFilters" {
+                continue
+            }
+
+            if !criteria.ActiveFilters[fieldName] {
+                continue
+            }
+
+            criteriaField := criteriaVal.Field(j)
+            cleanCriteria := reflect.Indirect(criteriaField)
+            cleanIssue := reflect.Indirect(issueVal.Field(j))
+
+            if criteriaField.Kind() == reflect.Ptr && criteriaField.IsNil() {
+                continue
+            }
+
+            if !cleanCriteria.IsValid() {
+                continue
+            }
+
+            criteriaFieldVal := cleanCriteria.Interface()
+            issueFieldVal := cleanIssue.Interface()
+
+            if fmt.Sprintf("%v", criteriaFieldVal) == "any" {
+                continue
+            }
+
+            if !reflect.DeepEqual(criteriaFieldVal, issueFieldVal) {
+                match = false
+                break
+            }
         }
+
+        if !match {
+            continue
+        }
+    
+        matchingIssues = append(matchingIssues, issues[i])
     }
-    return issuesWithStatus, nil
+    return matchingIssues, nil
 }
 
 func UpdateGitIgnore() error {

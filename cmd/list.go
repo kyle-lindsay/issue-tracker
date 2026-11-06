@@ -30,20 +30,33 @@ var listCmd = &cobra.Command{
         
         listPriority = strings.ToLower(listPriority)
         if !IsValidQueryPriority(listPriority) {
-            cmd.PrintErrf("Error: Invalid priority %q. Must be one of: %v\n", listPriority, GetValidPriorities())
+            cmd.PrintErrf("Error: Invalid priority %q. Must be one of: %v\n", listPriority, GetValidQueryPriorities())
             return
         }
         
         listStatus = strings.ToLower(listStatus)
-        if !IsValidStatus(listStatus) {
-            cmd.PrintErrf("Error: Invalid status %q. Must be one of: %v\n", listStatus, GetValidStatuses())
+        if !IsValidQueryStatus(listStatus) {
+            cmd.PrintErrf("Error: Invalid status %q. Must be one of: %v\n", listStatus, GetValidQueryStatuses())
             return
         }
 
-        chosenStatus = ParseStatus(listStatus)
-        chosenPriority = ParsePriority(listPriority)
+        filter := model.IssueFilter{
+            ActiveFilters: make(map[string]bool),
+        }
 
-        foundIssues, err := tracker.FindIssues(chosenPriority, chosenStatus)
+        if listStatus != "" && listStatus != "any" {
+            chosenStatus = ParseStatus(listStatus)
+            filter.Status = &chosenStatus
+            filter.ActiveFilters["Status"] = true
+        }
+
+        if listPriority != "" && listPriority != "any" {
+            chosenPriority = ParsePriority(listPriority)
+            filter.Priority = &chosenPriority
+            filter.ActiveFilters["Priority"] = true
+        }
+
+        foundIssues, err := tracker.GetMatchingIssues(filter)
         if err != nil {
             cmd.PrintErrf("Error: Failed to list issues: %v\n", err)            
         }
@@ -59,7 +72,7 @@ var listCmd = &cobra.Command{
         writer := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
 
         fmt.Fprintln(writer, "ID\tTITLE\tPRIORITY\tSTATUS\tCREATED AT\tLAST UPDATED")
-        
+
         for _, issue := range printIssues {
             createdStr := issue.CreatedAt.Format("2006-01-02 15:04")
             updatedStr := issue.LastUpdated.Format("2006-01-02 15:04")
