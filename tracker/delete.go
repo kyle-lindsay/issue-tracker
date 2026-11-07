@@ -26,7 +26,7 @@ func HardDelete(issueId int) error {
     }
 
     if !found {
-        return fmt.Errorf("no issue with id %d", issueId)
+        return fmt.Errorf("issue with id %d does not exist", issueId)
     }
 
     jsonData, err := json.MarshalIndent(remainingIssues, "", " ")
@@ -53,4 +53,22 @@ func SoftDelete(issueId int) error {
 
     _, err = UpdateIssue(issueId, model.Issue{Status: model.Deleted})
     return err
+}
+
+func RecoverSoftDelete(issueId int, status model.Status) (*model.Issue, error) {
+    issue, err := GetIssue(issueId)
+    if err != nil {
+        return nil, err
+    }
+
+    if issue == nil {
+        return nil, fmt.Errorf("issue with id %d does not exist", issueId)
+    }
+
+    if issue.Status != model.Deleted {
+       return nil, fmt.Errorf("issue with id %d is not deleted", issueId)
+    }
+
+    return UpdateIssue(issueId, model.Issue{Status: status})
+    
 }

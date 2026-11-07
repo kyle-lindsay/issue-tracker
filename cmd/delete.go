@@ -28,7 +28,7 @@ var deleteCmd = &cobra.Command{
         if hardDelete {
             err := tracker.HardDelete(issueId)
             if err != nil {
-                fmt.Errorf("Error: could not delete issue %d: %v\n", issueId, err)
+            cmd.PrintErrf("Error: could not delete issue %d: %v\n", issueId, err)
                 return
             }
             fmt.Printf("Permanently deleted issue %d\n", issueId)
@@ -37,7 +37,7 @@ var deleteCmd = &cobra.Command{
 
         err = tracker.SoftDelete(issueId)
         if err != nil {
-            fmt.Errorf("Error: could not delete issue %d: %v\n", issueId, err)
+            cmd.PrintErrf("Error: could not delete issue %d: %v\n", issueId, err)
             return
         }
         fmt.Printf("Sucessfully deleted issue %d\n", issueId)

@@ -75,8 +75,13 @@ You can filter the results by specific priorities, statuses, or limit the total 
         foundIssuesLength := len(foundIssues)
         
         if foundIssuesLength == 0 {
-            fmt.Println("No issues to tackle, great work!")
-            return
+            if chosenStatus == model.Open {
+                fmt.Println("No issues to tackle, great work!")
+                return
+            } else {
+                fmt.Println("No issues found")
+                return
+            }
         }
     
         if foundIssuesLength < listCount {
