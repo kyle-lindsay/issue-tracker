@@ -18,11 +18,20 @@ var (
     oldestFirst bool
 )
 
-// listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists saved issues",
-	Long: `Lists the first n issues in order of priority and time`,
+	Long: `List and view your project issues in a structured table.
+
+By default this command displays a table of all saved issues with the [open] status, sorted by the creation date.
+You can filter the results by specific priorities, statuses, or limit the total number of issues listed.`,
+    Example:`    # List all open issues
+        issues list
+    # List all issues with the [high] priority
+        issues list --status any --priority high
+    # List the five oldest open issues
+        issues list --limit 5 --oldest
+    `,
 	Run: func(cmd *cobra.Command, args []string) {
         var chosenStatus model.Status
         var chosenPriority model.Priority
@@ -58,11 +67,18 @@ var listCmd = &cobra.Command{
 
         foundIssues, err := tracker.GetMatchingIssues(filter)
         if err != nil {
-            cmd.PrintErrf("Error: Failed to list issues: %v\n", err)            
+            cmd.PrintErrf("Error: Failed to list issues: %v\n", err)
+            return
         }
         foundIssues = tracker.SortIssues(foundIssues, oldestFirst)
        
         foundIssuesLength := len(foundIssues)
+        
+        if foundIssuesLength == 0 {
+            fmt.Println("No issues to tackle, great work!")
+            return
+        }
+    
         if foundIssuesLength < listCount {
             listCount = foundIssuesLength
         }
@@ -95,7 +111,7 @@ var listCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(listCmd)
     
-    listCmd.Flags().IntVarP(&listCount, "limit", "n", 5, "The number of issues to list")
+    listCmd.Flags().IntVarP(&listCount, "limit", "l", 5, "The number of issues to list")
     listCmd.Flags().StringVarP(&listStatus, "status", "s", "open", "Limit to a certain status only")
     listCmd.Flags().StringVarP(&listPriority, "priority", "p", "any", "Limit to a certain priority only")
     listCmd.Flags().BoolVarP(&oldestFirst, "oldest", "o", false, "Sort issues by oldest first within each priority group")

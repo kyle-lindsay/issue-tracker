@@ -17,9 +17,12 @@ var (
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:`,
+	Short: "Create a new issue",
+	Long: `Create and save a new issue. By default, issue priority will be set to [medium]`,
+    Example: `    # Create an issue with title 'fix bug' and high priority
+        issues create "fix bug" --priority high
+    # Create an issue with title 'add feature' and description 'add the xyz feature'
+        issues create "add feature" --description "add the xyz feature"`,
     Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
         issueTitle := args[0]

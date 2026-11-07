@@ -56,10 +56,18 @@ func UpdateIssue(id int, updates model.Issue) (*model.Issue, error) {
     return &updatedIssue, os.WriteFile(jsonFile, jsonData, 0644)
 }
 
-func SetStatus(id int, status model.Status) (*model.Issue, error) {
+func SetOpenClosed(id int, status model.Status) (*model.Issue, error) {
     issue, err := GetIssue(id)
     if err != nil {
         return nil, err
+    }
+
+    if issue == nil {
+        return nil, fmt.Errorf("issue with id %d does not exist", id)
+    }
+
+    if issue.Status == model.Deleted {
+        return nil, fmt.Errorf("issue %d has been deleted", id)
     }
 
     if issue.Status == status {
