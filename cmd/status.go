@@ -1,40 +1,44 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+    "issue-tracker/model"
+    "issue-tracker/tracker"
 )
 
-// statusCmd represents the status command
 var statusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Displays information abouut your tracked issues",
+	Long: `Counts the number of issues, seperated by priority within each status`,
+    Example: `    # Display tracked issue status
+        issues status`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("status called")
-	},
+        counts, err := tracker.Count()
+        if err != nil {
+            cmd.PrintErrf("Error: could not display status: ", err)
+        }
+
+        statuses := []model.Status{model.Open, model.Closed, model.Deleted}
+        priorities := []model.Priority{model.High, model.Medium, model.Low}
+
+        totalCount := 0
+        for _, status := range statuses {
+            fmt.Printf("%s:\n", status.String())
+            issueCount := 0
+            for _, priority := range priorities {
+                fmt.Printf("    %s: %d\n", priority.String(), counts[status][priority])
+                issueCount += counts[status][priority]
+            }
+            fmt.Printf("    Total: %d\n", issueCount)
+            fmt.Printf("\n")
+            totalCount += issueCount
+        }
+        fmt.Printf("Total number of issues: %d\n", totalCount)
+    },
 }
 
 func init() {
 	rootCmd.AddCommand(statusCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// statusCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// statusCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
