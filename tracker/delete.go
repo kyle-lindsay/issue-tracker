@@ -51,22 +51,21 @@ func SoftDelete(issueId int) error {
        return fmt.Errorf("issue with id %d has already been deleted", issueId)
     }
 
-    _, err = UpdateIssue(issueId, model.Issue{Status: model.Deleted})
-    return err
+    return UpdateIssue(issueId, model.Issue{Status: model.Deleted})
 }
 
-func RecoverSoftDelete(issueId int, status model.Status) (*model.Issue, error) {
+func RecoverSoftDelete(issueId int, status model.Status) error {
     issue, err := GetIssue(issueId)
     if err != nil {
-        return nil, err
+        return err
     }
 
     if issue == nil {
-        return nil, fmt.Errorf("issue with id %d does not exist", issueId)
+        return fmt.Errorf("issue with id %d does not exist", issueId)
     }
 
     if issue.Status != model.Deleted {
-       return nil, fmt.Errorf("issue with id %d is not deleted", issueId)
+       return fmt.Errorf("issue with id %d is not deleted", issueId)
     }
 
     return UpdateIssue(issueId, model.Issue{Status: status})

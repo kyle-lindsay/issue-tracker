@@ -10,13 +10,13 @@ import (
     "issue-tracker/model"
 )
 
-func UpdateIssue(id int, updates model.Issue) (*model.Issue, error) {
+func UpdateIssue(id int, updates model.Issue) error {
     var issues []model.Issue
     var updatedIssue model.Issue
 
     issues, err := GetIssues()
     if err != nil {
-        return nil, err
+        return err
     }
 
     for i := range issues {
@@ -45,33 +45,33 @@ func UpdateIssue(id int, updates model.Issue) (*model.Issue, error) {
 
 
     if updatedIssue == (model.Issue{}) {
-        return nil, fmt.Errorf("issue with id %d not found", id)
+        return fmt.Errorf("issue with id %d not found", id)
     }
 
     jsonData, err := json.MarshalIndent(issues, "", " ")
     if err != nil {
-        return nil, err
+        return err
     }
 
-    return &updatedIssue, os.WriteFile(jsonFile, jsonData, 0644)
+    return os.WriteFile(jsonFile, jsonData, 0644)
 }
 
-func SetOpenClosed(id int, status model.Status) (*model.Issue, error) {
+func SetOpenClosed(id int, status model.Status) error {
     issue, err := GetIssue(id)
     if err != nil {
-        return nil, err
+        return err
     }
 
     if issue == nil {
-        return nil, fmt.Errorf("issue with id %d does not exist", id)
+        return fmt.Errorf("issue with id %d does not exist", id)
     }
 
     if issue.Status == model.Deleted {
-        return nil, fmt.Errorf("issue %d has been deleted", id)
+        return fmt.Errorf("issue %d has been deleted", id)
     }
 
     if issue.Status == status {
-        return nil, fmt.Errorf("issue %d already has this status", id)
+        return fmt.Errorf("issue %d already has this status", id)
     }
 
     return UpdateIssue(id, model.Issue{Status: status})

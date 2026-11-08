@@ -35,13 +35,13 @@ var recoverCmd = &cobra.Command{
 
         chosenStatus := ParseStatus(recoverStatus)
 
-        issue, err := tracker.RecoverSoftDelete(issueId, chosenStatus)
+        err = tracker.RecoverSoftDelete(issueId, chosenStatus)
         if err != nil {
             cmd.PrintErrf("Error: failed to recover issue: %v\n", err)
             return
         }
 
-        cmd.Printf("Recovered issue #%d (%s)\n", issue.Id, issue.Title)
+        cmd.Printf("Recovered issue #%d\n", issueId)
     },
 }
 

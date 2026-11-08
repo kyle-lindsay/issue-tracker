@@ -21,13 +21,13 @@ var closeCmd = &cobra.Command{
             cmd.PrintErrf("Error: invalid issue id\n")
             return
         }
-        issue, err := tracker.SetOpenClosed(issueId, model.Closed)
+        err = tracker.SetOpenClosed(issueId, model.Closed)
         if err != nil {
             cmd.PrintErrf("Error: failed to close issue: %v\n", err)
             return
         }
 
-        cmd.Printf("Closed issue #%d (%s)\n", issue.Id, issue.Title)
+        cmd.Printf("Closed issue #%d\n", issueId)
     },
 }
 

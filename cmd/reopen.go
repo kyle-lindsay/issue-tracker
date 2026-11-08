@@ -21,13 +21,13 @@ var reopenCmd = &cobra.Command{
             cmd.PrintErrf("Error: invalid issue id\n")
             return
         }
-        issue, err := tracker.SetOpenClosed(issueId, model.Open)
+        err = tracker.SetOpenClosed(issueId, model.Open)
         if err != nil {
             cmd.PrintErrf("Error: failed to reopen issue: %v\n", err)
             return
         }
 
-        cmd.Printf("Reopened issue #%d (%s)\n", issue.Id, issue.Title)
+        cmd.Printf("Reopened issue #%d\n", issueId)
     },
 }
 
