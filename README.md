@@ -64,10 +64,7 @@ issues reopen 42
 ```
 
 **Syntax:** 
-`issues reopen <id> [options]`
-
-**Options:**
-* `-s, --status <open|closed|deleted|any>`: Sets the status of the reopened issue. (Defaults to `open`).
+`issues reopen <id>`
 
 ### List Issues
 
@@ -115,7 +112,10 @@ issues recover 42
 ```
 
 **Syntax:** 
-`issues recover <id>`
+`issues recover <id> [options]`
+
+**Options:**
+* `-s, --status <open|closed>`: Sets the status of the recovered issue. (Defaults to `open`).
 
 > **NOTE:** Issues deleted with `issues delete <id> --hard` cannot be recovered.
 
