@@ -8,7 +8,7 @@ A lightweight issue tracking cli application for local development work.
 2. Make sure go is installed with `go --version`
 3. Run to command `make build` to compile the project
 
-Begin your command with `./issues` in the directory you built the project in.
+Begin your command with `./issues` in the directory you built the project in. (`issues.exe` for Windows)
 
 ## Run Anywhere:
 
